@@ -115,7 +115,7 @@ app.use(async (req, res, next) => {
 
 app.use(async (req, res, next) => {
   const host = req.headers.host; // e.g., vaibhav.localhost:3000
-  const mainDomain = 'localhost'; // Use your actual domain in production
+  const mainDomain = 'webbuilder-21cx.onrender.com'; // Use your actual domain in production
 
   const hostname = host.split(':')[0]; // remove :3000
   const parts = hostname.split('.');
