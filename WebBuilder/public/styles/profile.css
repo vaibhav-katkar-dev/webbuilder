@@ -1,0 +1,251 @@
+:root {
+  --bg-dark: #111827;
+  --bg-darker: #1f2937;
+  --bg-light: #f9fafb;
+  --accent: #2563eb;
+  --accent-hover: #1e40af;
+  --text-light: #ffffff;
+  --text-dark: #111827;
+  --text-muted: #6b7280;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+  
+}
+
+/* Navbar */
+.navbar {
+  background: var(--bg-darker);
+  color: var(--text-light);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: var(--shadow);
+}
+
+.navbar h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.menu-toggle {
+  font-size: 22px;
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+/* Profile Info */
+.profile-info {
+  font-size: 14px;
+  background: #374151;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+/* Layout */
+.container {
+  display: flex;
+  min-height: calc(100vh - 64px);
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--bg-dark);
+  color: white;
+  width: 240px;
+  padding: 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: white;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  background: #1e293b;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.sidebar a:hover {
+  background: #374151;
+}
+
+.logout-btn {
+  background: #ef4444 !important;
+  margin-top: auto;
+}
+
+/* Main Content */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* Dashboard */
+.dashboard-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.widget {
+  background: white;
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  min-height: 100px;
+  transition: var(--transition);
+}
+
+.widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition);
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    display: none;
+    width: 100%;
+    
+    position: static;
+  }
+
+  .sidebar.show {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+    margin-top: 5px;
+  }
+
+  .main {
+    padding: 20px;
+  }
+
+  .profile-info {
+    font-size: 12px;
+    padding: 6px 10px;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-info {
+    font-size: 10px;
+    padding: 4px 8px;
+    max-width: 150px;
+  }
+
+  .profile-info strong {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+html, body {
+  height: 100%;
+  overflow: hidden; /* Prevent whole page scroll */
+}
+
+.navbar {
+  height: 64px; /* Ensure fixed height */
+  flex-shrink: 0;
+}
+
+.container {
+  display: flex;
+  height: calc(100vh - 64px); /* Total viewport height minus navbar */
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 240px;
+  background: var(--bg-dark);
+  color: white;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Sidebar never scrolls */
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto; /* Enable scroll only here */
+  padding: 30px;
+  height: 100%;
+}
+

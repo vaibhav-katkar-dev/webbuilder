@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Add Template</title></head>
+<body>
+  <h1>Add New Template</h1>
+  <form method="POST" action="/admin/templates">
+    <input name="templateId" placeholder="templateId" required><br>
+    <input name="templateName" placeholder="Template Name" required><br>
+    <input name="previewImage" placeholder="Preview Image URL"><br>
+    <textarea name="html" placeholder="HTML" rows="5"></textarea><br>
+    <textarea name="css" placeholder="CSS" rows="5"></textarea><br>
+        <textarea name="js" placeholder="JS" rows="5"></textarea><br>
+
+    <button type="submit">Save Template</button>
+  </form>
+</body>
+</html>

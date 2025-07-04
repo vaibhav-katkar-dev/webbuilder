@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="stylesheet" href="/styles/profile.css">
+
+<style>
+  
+:root {
+  --bg-light: #f9fafb;
+  --bg-card: #ffffff;
+  --bg-accent: #007bff;
+  --bg-success: #28a745;
+  --bg-danger: #dc3545;
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+  --radius: 10px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-settings {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.user-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.user-header h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.user-header p {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.dashboard-card {
+  background-color: var(--bg-card);
+  padding: 25px 30px;
+  border-radius: var(--radius);
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.dashboard-card label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.dashboard-card input[type="text"],
+.dashboard-card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 15px;
+  transition: border 0.2s;
+  background-color: #fff;
+}
+
+.dashboard-card input:focus,
+.dashboard-card textarea:focus {
+  border-color: var(--bg-accent);
+  outline: none;
+}
+
+.dashboard-card button,
+.dashboard-card .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 15px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.dashboard-card .btn-save {
+  background-color: var(--bg-accent);
+  color: #fff;
+  margin-right: 10px;
+}
+
+.dashboard-card .btn-green {
+  background-color: var(--bg-success);
+  color: #fff;
+}
+
+.dashboard-card .btn-red {
+  background-color: var(--bg-danger);
+  color: #fff;
+}
+
+.dashboard-card button:hover,
+.dashboard-card .icon-btn:hover {
+  opacity: 0.92;
+}
+
+.icon-btn {
+  padding: 10px;
+  background-color: #e2e8f0;
+  border-radius: var(--radius);
+}
+
+.icon-btn:hover {
+  background-color: #d1d5db;
+}
+
+.icon-btn img {
+  vertical-align: middle;
+}
+
+.status-published {
+  color: var(--bg-success);
+  font-weight: 600;
+}
+
+.status-unpublished {
+  color: var(--bg-danger);
+  font-weight: 600;
+}
+
+.current-subdomain {
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.current-subdomain a {
+  color: var(--bg-accent);
+  text-decoration: none;
+}
+
+.current-subdomain a:hover {
+  text-decoration: underline;
+}
+
+/* Base fixed-size icon button */
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e2e8f0;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: 0; /* ensure icon is centered */
+  overflow: hidden;
+}
+
+.icon-btn:hover {
+  background-color: #d1d5db;
+}
+
+.icon-btn img {
+  max-width: 20px;
+  max-height: 20px;
+  object-fit: contain;
+}
+
+</style>
+
+
+</head>
+
+<body>
+
+  
+
+  <%- include('partials/top.ejs') %>
+
+    <main class="main">
+      
+        <section class="dashboard-settings">
+  <!-- 👤 Username Display -->
+  <div class="user-header">
+    <h2>Hello, <%= user.username %> 👋</h2>
+    <p>Manage your website settings below</p>
+  </div>
+
+  <!-- 🌐 Subdomain Setting -->
+  <div class="dashboard-card">
+    <h3>🌐 Set Your Subdomain</h3>
+    <form action="/site/<%= site._id %>/publish" method="POST">
+      <label for="subdomain">Choose a subdomain (e.g., mysite):</label>
+      <input type="text" name="subdomain" id="subdomain" placeholder="yourname" value="<%= site.subdomain || '' %>" required pattern="[a-z0-9-]{3,30}" />
+      <button type="submit">Save Subdomain</button>
+    </form>
+    <% if (site.subdomain) { %>
+      <p class="current-subdomain">🔗 Current: <a href="http://<%= site.subdomain %>.localhost:3000" target="_blank"><%= site.subdomain %>.localhost:3000</a></p>
+    <% } %>
+  </div>
+<!-- 🚀 Publish / Unpublish -->
+<div class="dashboard-card">
+  <h3>🚀 Site Status</h3>
+  <p>Status:
+    <strong class="<%= site.isPublished ? 'status-published' : 'status-unpublished' %>">
+      <%= site.isPublished ? 'Published ✅' : 'Not Published ❌' %>
+    </strong>
+  </p>
+
+  <!-- Publish / Unpublish Button -->
+<form method="POST" action="/site/<%= site._id %>/toggle-publish">
+  <button type="submit"
+    class="<%= site.isPublished ? 'btn-red icon-btn' : 'btn-green icon-btn' %>"
+    title="<%= site.isPublished ? 'Unpublish Site' : 'Publish Site' %>">
+    <img src="/icons/<%= site.isPublished ? 'circle-xmark-solid.svg' : 'rocket-solid.svg' %>"
+         alt="Publish Icon"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+    <span style="display: none;"><%= site.isPublished ? '❌' : '🚀' %></span>
+  </button>
+</form>
+
+</div>
+
+<!-- 📝 Site Info -->
+<div class="dashboard-card">
+  <h3>📝 Basic Site Info</h3>
+  <form method="POST" action="/site/update/<%= site._id %>">
+    <label>Business Name</label>
+    <input type="text" name="businessName" value="<%= site.fields?.businessName || '' %>" required />
+
+    <label>Description</label>
+    <textarea name="description" rows="4" placeholder="Enter a short description..."><%= site.fields?.description || '' %></textarea>
+
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+  <!-- Save -->
+  <button type="submit" class="btn-save" title="Save">💾 Save</button>
+</form>
+  <!-- Customize -->
+  <a href="/site/customize/<%= site.templateId %>" class="icon-btn btn-green" title="Customize">
+    <img src="/icons/pen-to-square-solid.svg" alt="Customize" width="18">
+  </a>
+
+  <!-- Delete -->
+  <form method="POST" action="/site/delete/<%= site._id %>">
+    <button type="submit" class="icon-btn btn-red" title="Delete">
+      <img src="/icons/trash-solid.svg" alt="Delete" width="18">D
+    </button>
+  </form>
+</div>
+
+</section>
+
+
+    </main>
+
+    <script src="/js/nav.js"></script>
+
+</body>
+
+</html>

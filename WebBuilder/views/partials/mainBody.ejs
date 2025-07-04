@@ -1,0 +1,146 @@
+<style>
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.dashboard-section {
+  margin-bottom: 2rem;
+}
+
+.site-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.site-card {
+  background: #ffffff;
+  padding: 1.25rem;
+  border-radius: 12px;
+  width: 300px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.site-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.site-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.site-card p {
+  font-size: 0.9rem;
+  margin: 4px 0;
+  color: #555;
+}
+
+.site-card a {
+  color: #007BFF;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.site-card a:hover {
+  text-decoration: underline;
+}
+
+.site-actions {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-small {
+  padding: 6px 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-small:hover {
+  background-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #b52a37;
+}
+
+.btn-icon {
+  background-color: #6c757d;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.btn-icon:hover {
+  background-color: #5a6268;
+}
+</style>
+
+<div class="dashboard-title">
+  👋 Welcome, <%= user.username %>
+</div>
+
+<section class="dashboard-section">
+  <h2>Your Sites</h2>
+
+  <% if (sites.length === 0) { %>
+    <p>You haven’t created any sites yet.</p>
+    <a href="/profile/templates" class="btn-small" style="background-color: #28a745;">+ Create Your First Site</a>
+  <% } else { %>
+    <div class="site-cards">
+      <% sites.forEach(site => { %>
+        <div class="site-card">
+          <h3><%= site.fields.businessName || "Untitled Site" %></h3>
+          <p><strong>Template:</strong> <%= site.templateId %></p>
+          <p><strong>Created:</strong> <%= site.createdAt.toDateString() %></p>
+          <p><strong>URL:</strong><br>
+            <a href="http://<%= site.subdomain %>.localhost:3000/" target="_blank">
+              <%= site.subdomain %>.localhost:3000/
+            </a>
+          </p>
+
+          <div class="site-actions">
+            <a href="/site/customize/<%= site.templateId %>" class="btn-small" title="Edit">
+              <img src="/icons/pen-to-square-solid.svg" alt="Edit" width="16">
+            </a>
+
+            <a href="http://<%= site.subdomain %>.localhost:3000" target="_blank" class="btn-small" title="View">
+              <img src="/icons/arrow-up-right-from-square-solid.svg" alt="View" width="16">
+            </a>
+
+            <a href="/site/<%= site._id %>" class="btn-small btn-icon" title="Settings">
+              <img src="/icons/gear-solid.svg" alt="Settings" width="16">
+            </a>
+
+            <!-- Uncomment if you want Delete option -->
+            <!--
+            <form method="POST" action="/site/delete/<%= site._id %>" style="display:inline;">
+              <button type="submit" class="btn-small btn-danger" title="Delete">🗑️</button>
+            </form>
+            -->
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>

@@ -1,0 +1,25 @@
+#preview-frame.desktop {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  border: 1px solid #ccc;
+}
+
+#preview-frame.mobile {
+  width: 375px;
+  height: 667px;
+  border: 1px solid #ccc;
+  margin: auto;
+}
+
+.view-toggle button.active {
+  background-color: #007bff;
+  color: white;
+}
+#preview-frame.mobile {
+  overflow-y: auto;
+}
+.view-toggle button.active {
+  background-color: #007bff;
+  color: white;
+}

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Edit Template</title></head>
+<body>
+  <h1>Edit Template: <%= template.templateName %></h1>
+  <form method="POST" action="/admin/update/<%= template.templateId %>">
+    <input name="templateName" value="<%= template.templateName %>" required><br>
+    <input name="previewImage" value="<%= template.previewImage %>"><br>
+    <textarea name="html" rows="5"><%= template.html %></textarea><br>
+    <textarea name="css" rows="5"><%= template.css %></textarea><br>
+        <textarea name="js" rows="5"><%= template.js %></textarea><br>
+
+    <button type="submit">Update</button>
+  </form>
+</body>
+</html>

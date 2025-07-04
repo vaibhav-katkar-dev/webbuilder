@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Template Admin</title>
+</head>
+<body>
+  <h1>All Templates</h1>
+  <a href="/admin/new">Add New Template</a>
+  <ul>
+  <% templates.forEach(t => { %>
+    <li>
+      <strong><%= t.templateName %></strong> – 
+      <a href="/admin/edit/<%= t.templateId %>">Edit</a> | 
+      <a href="/admin/delete/<%= t.templateId %>" onclick="return confirm('Are you sure you want to delete this template?');">Delete</a>
+    </li>
+  <% }) %>
+</ul>
+
+</body>
+</html>

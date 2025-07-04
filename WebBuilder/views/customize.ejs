@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customize Your Business Website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/styles/customize.css">
+  <style>
+ /* Aside Form Panel */
+.form-panel {
+  position: fixed;
+  top: 0;
+  left: 0;                /* ⬅️ Moved to the left side */
+  height: 100vh;
+  width: 100%;
+  max-width: 400px;
+  background-color: #ffffff;
+  opacity: 0.95;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);  /* ⬅️ Inverted shadow direction */
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(0); /* Panel is visible by default */
+}
+
+/* Hidden by default */
+.form-panel.hidden {
+  transform: translateX(-100%); /* ⬅️ Slide off-screen to the left */
+}
+
+/* Form inside the panel */
+.form-panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  opacity: 1;
+}
+
+.form-panel input,
+.form-panel textarea,
+.form-panel button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* Overlay for background click to close */
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.3);
+  z-index: 999;
+  display: none;
+}
+
+.form-overlay.visible {
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-panel {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-panel {
+    max-width: 90%;
+    
+  }
+}
+
+  #map { height: 300px; margin-bottom: 1rem; }
+    .btn { padding: 0.5rem 1rem; margin-bottom: 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- Page Heading -->
+  <!-- <h1 class="page-title">Customize Your Business Website</h1> -->
+
+
+
+  <!-- Backdrop Overlay -->
+  <div class="form-overlay" id="formOverlay"></div>
+
+  <!-- Live Preview Section -->
+  <main class="preview-section">
+    <style id="live-style"><%- css || '' %></style>
+    <div id="live-preview"><%- html || '' %></div>
+  </main>
+
+
+  <!-- Slide-in Customizer Panel -->
+  <aside class="form-panel" id="formPanel"  >
+   <script>
+  // Safely use content.location.coordinates in JS
+  window.locationCoordinates = <%= JSON.stringify(content.location?.coordinates || [null, null]) %>;
+</script>
+
+    <form action="/site/create" method="POST">
+      <input type="hidden" name="templateId" value="<%= templateId %>" />
+      <input type="hidden" name="username" value="<%= username %>" />
+
+      <% const field = template.fields; const links = field.socialLinks; %>
+
+      <!-- Existing logo input replaced with file input + preview -->
+<label>Logo Image</label>
+<input type="file" name="logoImage" id="logoImage" accept="image/*" />
+
+<!-- Hidden field to store final Cloudinary URL -->
+<input type="hidden" name="logoUrl" id="logoUrl" value="<%= field.logoUrl %>" />
+
+<!-- Preview after upload -->
+<img id="logoPreview" src="<%= field.logoUrl || '' %>" alt="Logo Preview" width="100" />
+
+
+
+
+      <label>Business Name</label>
+      <input type="text" name="businessName" id="businessName" value="<%= field.businessName %>" />
+
+<label>Gallery Images</label>
+<input type="file" id="galleryImages" accept="image/*" multiple />
+
+<!-- This stores uploaded image URLs -->
+<input type="hidden" id="galleryImageUrls" name="galleryImages" value='<%= JSON.stringify(field.galleryImages || []) %>' />
+
+<!-- Preview section -->
+<div id="galleryPreview" style="margin-top: 10px;"></div>
+
+<!-- Banner Image Upload -->
+<label>Banner Image</label>
+<input type="file" name="bannerImage" id="bannerImage" accept="image/*" />
+<input type="hidden" name="bannerImageUrl" id="bannerImageUrl" value="<%= field.bannerImage %>" />
+<img id="bannerImagePreview" src="<%= field.bannerImage || '' %>" alt="Banner Preview" width="100" />
+
+
+
+
+
+
+
+
+      <label>Description</label>
+      <textarea name="description" id="description"><%= field.description %></textarea>
+
+      <label>Phone Number</label>
+      <input type="text" name="phoneNumber" id="phoneNumber" value="<%= field.phoneNumber %>" />
+
+      <label>Email</label>
+      <input type="email" name="email" id="email" value="<%= field.email %>" />
+
+      <label>Address</label>
+      <textarea name="address" id="address"><%= field.address %></textarea>
+
+      <label>Services (comma separated)</label>
+      <input type="text" name="services" id="services" value="<%= field.services %>" />
+
+      <label>Call to Action Text</label>
+      <input type="text" name="callToActionText" id="callToActionText" value="<%= field.callToActionText %>" />
+
+      <label>Call to Action Link</label>
+      <input type="text" name="callToActionLink" id="callToActionLink" value="<%= field.callToActionLink %>" />
+
+      <label>Facebook</label>
+      <input type="text" name="facebook" id="facebook" value="<%= links.facebook %>" />
+
+      <label>Instagram</label>
+      <input type="text" name="instagram" id="instagram" value="<%= links.instagram %>" />
+
+      <label>Twitter</label>
+      <input type="text" name="twitter" id="twitter" value="<%= links.twitter %>" />
+
+      <label>LinkedIn</label>
+      <input type="text" name="linkedin" id="linkedin" value="<%= links.linkedin %>" />
+
+
+<!-- Trigger button -->
+<button type="button" id="detectLocationBtn">📍 Get My Location</button>
+
+<!-- Display status -->
+<div id="locationStatus" style="margin-top: 10px; color: green;"></div>
+
+<!-- Hidden form inputs -->
+<input type="hidden" name="location[type]" value="Point">
+<input type="hidden" name="location[coordinates][0]" id="longitude" value="<%= content.location?.coordinates?.[0] || '' %>">
+<input type="hidden" name="location[coordinates][1]" id="latitude" value="<%= content.location?.coordinates?.[1] || '' %>">
+
+      <button type="submit">🚀 Save </button>
+    </form>
+  </aside>
+
+  <!-- JS -->
+  <script src="/js/customize.js"></script>
+  <script src="/js/prev.js"></script>
+    <script src="/js/logoUpload.js"></script>
+     <script src="/js/gallaryUpload.js"></script>
+
+  <script src="/js/mapD.js"></script> 
+   
+    
+
+
+
+
+  <!-- Embedded JSON -->
+  <script type="application/json" id="template-data">
+    <%- JSON.stringify(template || {}) %>
+  </script>
+
+</body>
+</html>
