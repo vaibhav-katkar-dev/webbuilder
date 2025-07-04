@@ -114,18 +114,23 @@ app.use(async (req, res, next) => {
 
 app.use(async (req, res, next) => {
   const host = req.headers.host; // e.g., vaibhav.webbuilder-21cx.onrender.com
-  const mainDomain = 'webbuilder-21cx.onrender.com'; // Render domain only
-
+  const mainDomain = 'webbuilder-21cx.onrender.com';
   const hostname = host.split(':')[0]; // remove port if any
 
-  // Only allow requests ending with mainDomain
+  // Skip if the host is not from the expected domain
   if (!hostname.endsWith(mainDomain)) return next();
 
   // Extract subdomain (e.g., vaibhav)
   const subdomain = hostname.replace(`.${mainDomain}`, '');
-  
-  // Skip if no valid subdomain
+
+  // Skip if root domain or www
   if (!subdomain || subdomain === 'www') return next();
+
+  // Skip subdomain middleware for app routes like login, api, etc.
+  const skipPaths = ['/login', '/register', '/api', '/dashboard', '/admin'];
+  if (skipPaths.some(path => req.path.startsWith(path))) {
+    return next();
+  }
 
   try {
     const site = await Site.findOne({ subdomain, isPublished: true });
@@ -152,9 +157,8 @@ app.use(async (req, res, next) => {
       businessName: content.businessName || '',
       callToActionText: content.callToActionText || ''
     });
-
   } catch (err) {
-    console.error('🔴 Subdomain Render Error:', err);
+    console.error('🔴 Subdomain Middleware Error:', err);
     return res.status(500).send('Internal Server Error');
   }
 });
