@@ -112,38 +112,25 @@ app.use(async (req, res, next) => {
 });
 
 
-
 app.use(async (req, res, next) => {
-  const host = req.headers.host; // e.g., vaibhav.localhost:3000
-  const mainDomain = 'webbuilder-21cx.onrender.com'; // Use your actual domain in production
+  const host = req.headers.host; // e.g., vaibhav.webbuilder-21cx.onrender.com
+  const mainDomain = 'webbuilder-21cx.onrender.com';
 
-  const hostname = host.split(':')[0]; // remove :3000
-  const parts = hostname.split('.');
+  if (!host.endsWith(mainDomain)) return next();
 
-  // Not a subdomain request, skip
-  if (!hostname.endsWith(mainDomain) || parts.length !== 2) {
-    return next();
-  }
-
-  const subdomain = parts[0]; // e.g., vaibhav
+  const subdomain = host.replace(`.${mainDomain}`, '');
+  if (!subdomain || subdomain === 'www') return next();
 
   try {
     const site = await Site.findOne({ subdomain, isPublished: true });
-
-    if (!site) {
-      return res.status(404).send('🚫 Site not found or not published');
-    }
+    if (!site) return res.status(404).send('🚫 Site not found or not published');
 
     const template = await Template.findOne({ templateId: site.templateId });
-    if (!template) {
-      return res.status(404).send('🚫 Template not found');
-    }
+    if (!template) return res.status(404).send('🚫 Template not found');
 
     const content = site.fields || {};
-    
-    // ✅ Attach location if present
     if (site.location && Array.isArray(site.location.coordinates)) {
-      content.location = site.location; // { type: "Point", coordinates: [lng, lat] }
+      content.location = site.location;
     }
 
     const compiledHtml = ejs.render(template.html || '', { content });
@@ -159,12 +146,12 @@ app.use(async (req, res, next) => {
       businessName: content.businessName || '',
       callToActionText: content.callToActionText || ''
     });
+
   } catch (err) {
     console.error('Error in subdomain render:', err);
     return res.status(500).send('Internal Server Error');
   }
 });
-
 
 
 // ===== MongoDB Connection =====
