@@ -114,11 +114,17 @@ app.use(async (req, res, next) => {
 
 app.use(async (req, res, next) => {
   const host = req.headers.host; // e.g., vaibhav.webbuilder-21cx.onrender.com
-  const mainDomain = 'webbuilder-21cx.onrender.com';
+  const mainDomain = 'webbuilder-21cx.onrender.com'; // Render domain only
 
-  if (!host.endsWith(mainDomain)) return next();
+  const hostname = host.split(':')[0]; // remove port if any
 
-  const subdomain = host.replace(`.${mainDomain}`, '');
+  // Only allow requests ending with mainDomain
+  if (!hostname.endsWith(mainDomain)) return next();
+
+  // Extract subdomain (e.g., vaibhav)
+  const subdomain = hostname.replace(`.${mainDomain}`, '');
+  
+  // Skip if no valid subdomain
   if (!subdomain || subdomain === 'www') return next();
 
   try {
@@ -148,7 +154,7 @@ app.use(async (req, res, next) => {
     });
 
   } catch (err) {
-    console.error('Error in subdomain render:', err);
+    console.error('🔴 Subdomain Render Error:', err);
     return res.status(500).send('Internal Server Error');
   }
 });
