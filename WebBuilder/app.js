@@ -112,36 +112,38 @@ app.use(async (req, res, next) => {
 });
 
 
+
 app.use(async (req, res, next) => {
-  const host = req.headers.host; // e.g., vaibhav.webbuilder-21cx.onrender.com
-  const mainDomain = 'webbuilder-21cx.onrender.com';
-  const hostname = host.split(':')[0]; // remove port if any
+  const host = req.headers.host; // e.g., vaibhav.localhost:3000
+  const mainDomain = 'localhost'; // Use your actual domain in production
 
-  // Skip if the host is not from the expected domain
-  if (!hostname.endsWith(mainDomain)) return next();
+  const hostname = host.split(':')[0]; // remove :3000
+  const parts = hostname.split('.');
 
-  // Extract subdomain (e.g., vaibhav)
-  const subdomain = hostname.replace(`.${mainDomain}`, '');
-
-  // Skip if root domain or www
-  if (!subdomain || subdomain === 'www') return next();
-
-  // Skip subdomain middleware for app routes like login, api, etc.
-  const skipPaths = ['/login', '/register', '/api', '/dashboard', '/admin'];
-  if (skipPaths.some(path => req.path.startsWith(path))) {
+  // Not a subdomain request, skip
+  if (!hostname.endsWith(mainDomain) || parts.length !== 2) {
     return next();
   }
 
+  const subdomain = parts[0]; // e.g., vaibhav
+
   try {
     const site = await Site.findOne({ subdomain, isPublished: true });
-    if (!site) return res.status(404).send('🚫 Site not found or not published');
+
+    if (!site) {
+      return res.status(404).send('🚫 Site not found or not published');
+    }
 
     const template = await Template.findOne({ templateId: site.templateId });
-    if (!template) return res.status(404).send('🚫 Template not found');
+    if (!template) {
+      return res.status(404).send('🚫 Template not found');
+    }
 
     const content = site.fields || {};
+    
+    // ✅ Attach location if present
     if (site.location && Array.isArray(site.location.coordinates)) {
-      content.location = site.location;
+      content.location = site.location; // { type: "Point", coordinates: [lng, lat] }
     }
 
     const compiledHtml = ejs.render(template.html || '', { content });
@@ -158,10 +160,11 @@ app.use(async (req, res, next) => {
       callToActionText: content.callToActionText || ''
     });
   } catch (err) {
-    console.error('🔴 Subdomain Middleware Error:', err);
+    console.error('Error in subdomain render:', err);
     return res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 // ===== MongoDB Connection =====
