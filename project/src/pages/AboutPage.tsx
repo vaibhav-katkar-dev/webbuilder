@@ -158,21 +158,8 @@ const AboutPage = () => {
         </div>
 
         {/* Team */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
-            Meet Our Team
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 text-center hover:bg-white/15 transition-all duration-200">
-                <div className="text-6xl mb-4">{member.avatar}</div>
-                <h3 className="text-lg font-bold text-white mb-2">{member.name}</h3>
-                <div className="text-purple-400 font-semibold mb-3">{member.role}</div>
-                <p className="text-white/70 text-sm leading-relaxed">{member.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+       
+         
 
         {/* Ad Space */}
         <AdSpace key={adKey} size="rectangle" className="mb-16" />
